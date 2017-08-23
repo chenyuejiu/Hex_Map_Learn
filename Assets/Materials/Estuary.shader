@@ -41,7 +41,7 @@
 
 			float river = River(IN.riverUV, _MainTex);
 
-			float water = lerp(shoreWater, river, shore);
+			float water = lerp(shoreWater, river, IN.uv_MainTex.x);
 
 			fixed4 c = saturate(_Color + water);
 			o.Albedo = c.rgb;
