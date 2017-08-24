@@ -41,18 +41,7 @@ public class HexCell : MonoBehaviour {
 			uiPosition.z = -position.y;
 			uiRect.localPosition = uiPosition;
 
-			if (
-				hasOutgoingRiver &&
-				elevation < GetNeighbor(outgoingRiver).elevation
-			) {
-				RemoveOutgoingRiver();
-			}
-			if (
-				hasIncomingRiver &&
-				elevation > GetNeighbor(incomingRiver).elevation
-			) {
-				RemoveIncomingRiver();
-			}
+            validateRivers();
 
 			for (int i = 0; i < roads.Length; i++) {
 				if (roads[i] && GetElevationDifference((HexDirection)i) > 1) {
@@ -156,6 +145,7 @@ public class HexCell : MonoBehaviour {
                 return;
             }
             waterLevel = value;
+            validateRivers();
             Refresh();
         }
     }
@@ -165,6 +155,44 @@ public class HexCell : MonoBehaviour {
             return waterLevel > elevation;
         }
     }
+
+    public int UrbanLevel {
+        get {
+            return urbanLevel;
+        }
+        set {
+            if (urbanLevel != value) {
+                urbanLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int FarmLevel {
+        get {
+            return farmLevel;
+        }
+        set {
+            if(farmLevel != value) {
+                farmLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int PlantLevel {
+        get {
+            return plantLevel;
+        }
+        set {
+            if (plantLevel != value) {
+                plantLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    int urbanLevel, farmLevel, plantLevel;
 
 	Color color;
 
@@ -243,7 +271,7 @@ public class HexCell : MonoBehaviour {
 		}
 
 		HexCell neighbor = GetNeighbor(direction);
-		if (!neighbor || elevation < neighbor.elevation) {
+        if (!IsValidRiverDestionation(neighbor)) {
 			return;
 		}
 
@@ -308,5 +336,20 @@ public class HexCell : MonoBehaviour {
 
 	void RefreshSelfOnly () {
 		chunk.Refresh();
-	}
+    }
+
+    bool IsValidRiverDestionation(HexCell neighbor) {
+        return neighbor && (
+            elevation >= neighbor.elevation || WaterLevel == neighbor.elevation
+            );
+    }
+
+    void validateRivers() {
+        if(hasOutgoingRiver && !IsValidRiverDestionation(GetNeighbor(outgoingRiver))) {
+            RemoveOutgoingRiver();
+        }
+        if (hasIncomingRiver && !GetNeighbor(incomingRiver).IsValidRiverDestionation(this)) {
+            RemoveIncomingRiver();
+        }
+    }
 }
