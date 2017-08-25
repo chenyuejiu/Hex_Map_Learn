@@ -64,16 +64,21 @@ public static class HexMetrics {
         new float[]{0.4f,0.6f,0.8f}
     };
 
-    public const float wallHeight = 3f;
+    public const float wallHeight = 4f;
+    public const float wallYOffset = -1f;
     public const float wallthickness = 0.75f;
 
     public const float wallElevationOffset = verticalTerraceStepSize;
+
+    public const float wallTowerThreshold = 0.5f;
+
+    public const float bridgeDesignLength = 7f;
 
     public static Vector3 WallLerp(Vector3 near, Vector3 far) {
         near.x += (far.x - near.x) * 0.5f;
         near.z += (far.z - near.z) * 0.5f;
         float v = near.y < far.y ? wallElevationOffset : (1 - wallElevationOffset);
-        near.y += (far.y - near.y) * v;
+        near.y += (far.y - near.y) * v + wallYOffset;
 
         return near;
     }
