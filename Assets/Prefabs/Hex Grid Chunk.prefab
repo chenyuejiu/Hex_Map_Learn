@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 23000014232703308}
   - component: {fileID: 114000013036081130}
   m_Layer: 0
-  m_Name: Estuaries
+  m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,6 +93,24 @@ GameObject:
   - component: {fileID: 114000010052569294}
   m_Layer: 0
   m_Name: Hex Grid Chunk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1217929794793186
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4457060837359558}
+  - component: {fileID: 33840427501818506}
+  - component: {fileID: 23404815753231228}
+  - component: {fileID: 114215761435486682}
+  m_Layer: 0
+  m_Name: Estuaries
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +197,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4000012252666914}
-  m_RootOrder: 4
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4000011417168598
 Transform:
@@ -208,10 +226,11 @@ Transform:
   - {fileID: 4000013101158204}
   - {fileID: 4000011417168598}
   - {fileID: 4691773978957588}
-  - {fileID: 4000010689220438}
+  - {fileID: 4457060837359558}
   - {fileID: 4468129814794892}
   - {fileID: 4215315454646352}
   - {fileID: 4534425314313960}
+  - {fileID: 4000010689220438}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -240,6 +259,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000012252666914}
   m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4457060837359558
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1217929794793186}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4000012252666914}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4468129814794892
 Transform:
@@ -351,13 +383,13 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012603289920}
   m_Enabled: 1
-  m_CastShadows: 0
+  m_CastShadows: 2
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: cc493acce0c466947896364d1a7327a2, type: 2}
+  - {fileID: 2100000, guid: df5d2420119c12b4aa32ab6f0fd91970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -390,6 +422,38 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 0c03d94ecb1845a4a924b687d94b316b, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!23 &23404815753231228
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1217929794793186}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: cc493acce0c466947896364d1a7327a2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -500,6 +564,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1395598480228182}
   m_Mesh: {fileID: 0}
+--- !u!33 &33840427501818506
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1217929794793186}
+  m_Mesh: {fileID: 0}
 --- !u!33 &33912552858321778
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -530,7 +601,7 @@ MonoBehaviour:
   roads: {fileID: 114000011881523884}
   water: {fileID: 114965785148764424}
   waterShore: {fileID: 114810491748036220}
-  estuaries: {fileID: 114000013036081130}
+  estuaries: {fileID: 114215761435486682}
   features: {fileID: 114041888045001980}
 --- !u!114 &114000011082573560
 MonoBehaviour:
@@ -596,8 +667,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCollider: 0
   useColors: 0
-  useUVCoordinates: 1
-  useUV2Coordinates: 1
+  useUVCoordinates: 0
+  useUV2Coordinates: 0
 --- !u!114 &114041888045001980
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -630,9 +701,31 @@ MonoBehaviour:
     - {fileID: 4963743791206924, guid: 4afd9c7bf88d33c41bb8b300ae46217b, type: 2}
     - {fileID: 4963743791206924, guid: 5ae0edee193423f4eb6ba3c385022fe0, type: 2}
   plantCollections:
-  - prefabs: []
-  - prefabs: []
-  - prefabs: []
+  - prefabs:
+    - {fileID: 4963743791206924, guid: d32f8d77ae1060b46b7a059e6be2b5d1, type: 2}
+    - {fileID: 4963743791206924, guid: 0265a5aadcd8c0f41bdf9903ac1280ff, type: 2}
+  - prefabs:
+    - {fileID: 4963743791206924, guid: 4815865fbb5f5934598e75bba93518d8, type: 2}
+    - {fileID: 4963743791206924, guid: cc06a6c9b75f58e42bc57224dd9432d4, type: 2}
+  - prefabs:
+    - {fileID: 4963743791206924, guid: 4105f133ed2b9a84eb7ff9118236e681, type: 2}
+    - {fileID: 4963743791206924, guid: a7ca4f7cd4ae48c4c96c3d0430852c8d, type: 2}
+  walls: {fileID: 114000013036081130}
+--- !u!114 &114215761435486682
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1217929794793186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c547250cafb924e6397c4c850c04fe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useCollider: 0
+  useColors: 0
+  useUVCoordinates: 1
+  useUV2Coordinates: 1
 --- !u!114 &114810491748036220
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -192,6 +192,20 @@ public class HexCell : MonoBehaviour {
         }
     }
 
+    public bool Walled {
+        get {
+            return walled;
+        }
+        set {
+            if (walled != value) {
+                walled = value;
+                Refresh();
+            }
+        }
+    }
+
+    bool walled;
+
     int urbanLevel, farmLevel, plantLevel;
 
 	Color color;
