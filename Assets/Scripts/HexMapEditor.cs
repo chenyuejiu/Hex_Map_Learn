@@ -206,26 +206,4 @@ public class HexMapEditor : MonoBehaviour {
 			}
 		}
 	}
-
-    public void Save() {
-        //Debug.Log(Application.persistentDataPath);
-        string path = Path.Combine(Application.persistentDataPath, "Test.map");
-        using ( BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)) ) {
-            writer.Write(0);
-            hexGrid.Save(writer);
-        }
-    }
-
-    public void Load() {
-        string path = Path.Combine(Application.persistentDataPath, "Test.map");
-        using( BinaryReader reader = new BinaryReader(File.OpenRead(path)) ) {
-            int header = reader.ReadInt32();
-            if (header == 0) {
-                hexGrid.Load(reader);
-            }
-            else {
-                Debug.LogWarning("Unknown map format " + header);
-            }
-        }
-    }
 }
