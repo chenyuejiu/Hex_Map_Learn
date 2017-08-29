@@ -6,6 +6,8 @@ public class HexMapEditor : MonoBehaviour {
 
 	public HexGrid hexGrid;
 
+    public Material terrainMaterial;
+
 	int activeElevation;
     int activeWaterLevel;
     int activeUrbanLevel, activeFarmLevel, activePlantLevel, activeSpecialIndex;
@@ -28,6 +30,10 @@ public class HexMapEditor : MonoBehaviour {
 	HexDirection dragDirection;
 	HexCell previousCell;
 
+    private void Awake() {
+        terrainMaterial.DisableKeyword("GRID_ON");
+    }
+
     public void SetTerrainTypeIndex(int index) {
         activeTerrainTypeIndex = index;
     }
@@ -36,7 +42,7 @@ public class HexMapEditor : MonoBehaviour {
 		applyElevation = toggle;
 	}
 
-	public void SetElevation (float elevation) {
+    public void SetElevation (float elevation) {
 		activeElevation = (int)elevation;
 	}
 
@@ -206,4 +212,13 @@ public class HexMapEditor : MonoBehaviour {
 			}
 		}
 	}
+
+    public void ShowGrid(bool visible ) {
+        if ( visible ) {
+            terrainMaterial.EnableKeyword("GRID_ON");
+        }
+        else {
+            terrainMaterial.DisableKeyword("GRID_ON");
+        }
+    }
 }
