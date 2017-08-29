@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,11 @@ public class SaveLoadMenu : MonoBehaviour {
 
     public Text menuLabel, actionButtonLabel;
     public InputField nameInput;
+
+    public RectTransform listContent;
+
+    public SaveLoadItem itemPrefab;
+
     public HexGrid hexGrid;
 
 
@@ -22,6 +28,7 @@ public class SaveLoadMenu : MonoBehaviour {
             actionButtonLabel.text = "Load";
         }
 
+        FillList();
         gameObject.SetActive(true);
         HexMapCamera.Locked = true;
     }
@@ -40,10 +47,10 @@ public class SaveLoadMenu : MonoBehaviour {
     }
 
     void Save(string path) {
-        //Debug.Log(Application.persistentDataPath);
+        //Debug.Log( Application.persistentDataPath );
         //string path = Path.Combine(Application.persistentDataPath, "Test.map");
 
-        using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create))) {
+        using ( BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create))) {
             writer.Write(1);
             hexGrid.Save(writer);
         }
@@ -80,5 +87,40 @@ public class SaveLoadMenu : MonoBehaviour {
             Load(path);
         }
         Close();
+    }
+
+    public void SelectItem( string name ) {
+        nameInput.text = name;
+    }
+
+    void FillList() {
+        for(int i=0;i<listContent.childCount;i++ ) {
+            Destroy( listContent.GetChild( i ).gameObject );
+        }
+
+        string[] paths = Directory.GetFiles( Application.persistentDataPath, "*.map" );
+        Array.Sort( paths );
+
+        for(int i=0;i<paths.Length;i++ ) {
+            SaveLoadItem item = Instantiate( itemPrefab );
+            item.menu = this;
+            item.MapName = Path.GetFileNameWithoutExtension( paths[i] );
+            item.transform.SetParent( listContent, false );
+        }
+    }
+
+    public void Delete() {
+        string path = GetSelectedPath();
+        if ( path == null ) {
+            return;
+        }
+        if ( !File.Exists( path ) ) {
+            Debug.LogError( "File does not exist " + path );
+            return;
+        }
+
+        File.Delete( path );
+        nameInput.text = "";
+        FillList();
     }
 }
