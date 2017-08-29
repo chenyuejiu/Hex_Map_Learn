@@ -74,8 +74,6 @@ public static class HexMetrics {
 
     public const float bridgeDesignLength = 7f;
 
-    public static Color[] colors;
-
     public static Vector3 WallLerp(Vector3 near, Vector3 far) {
         near.x += (far.x - near.x) * 0.5f;
         near.z += (far.z - near.z) * 0.5f;
