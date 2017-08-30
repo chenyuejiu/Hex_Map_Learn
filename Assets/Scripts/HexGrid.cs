@@ -5,21 +5,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour {
-
-	int chunkCountX, chunkCountZ;
-
+    
 	public HexCell cellPrefab;
 	public Text cellLabelPrefab;
 	public HexGridChunk chunkPrefab;
 
 	public Texture2D noiseSource;
 
-	HexGridChunk[] chunks;
-	HexCell[] cells;
-
     public int cellCountX = 20, cellCountZ = 15;
 
     public int seed;
+
+    int chunkCountX, chunkCountZ;
+
+    HexGridChunk[] chunks;
+	HexCell[] cells;
+
+    HexCellPriorityQueue searchFrontier;
 
 	void Awake () {
 		HexMetrics.noiseSource = noiseSource;
@@ -202,6 +204,13 @@ public class HexGrid : MonoBehaviour {
 
     IEnumerator Search( HexCell fromCell, HexCell toCell ) {
 
+        if(searchFrontier == null ) {
+            searchFrontier = new HexCellPriorityQueue();
+        }
+        else {
+            searchFrontier.Clear();
+        }
+
         for(int i=0;i<cells.Length;i++ ) {
             cells[i].Distance = int.MaxValue;
             cells[i].DisableHighlight();
@@ -211,23 +220,19 @@ public class HexGrid : MonoBehaviour {
 
         WaitForSeconds delay = new WaitForSeconds(1 / 60f);
 
-        List<HexCell> frontier = new List<HexCell>();
-        //List<HexCell> frontier = ListPool<HexCell>.Get();
-
         fromCell.Distance = 0;
-        frontier.Add(fromCell);
+        searchFrontier.Enqueue(fromCell);
 
-        while(frontier.Count > 0 ) {
+        while ( searchFrontier.Count > 0 ) {
 
             yield return delay;
 
-            HexCell current = frontier[0];
-            frontier.RemoveAt(0);
+            HexCell current = searchFrontier.Dequeue();
 
             if(current == toCell ) {
                 current = current.PathFrom;
                 while ( current != fromCell ) {
-                    current.EnableHighlight(Color.white);
+                    current.EnableHighlight(Color.magenta);
                     current = current.PathFrom;
                 }
                 break;
@@ -265,19 +270,18 @@ public class HexGrid : MonoBehaviour {
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
                     neighbor.SearchHeuristic = neighbor.coordinates.DistanceTo(toCell.coordinates);
-                    frontier.Add(neighbor);
+                    searchFrontier.Enqueue(neighbor);
                 }
                 else if( distance < neighbor.Distance ) {
+                    int oldPriority = neighbor.SearchPriority;
                     neighbor.Distance = distance;
                     neighbor.PathFrom = current;
+                    searchFrontier.Change(neighbor, oldPriority);
                 }
 
-                frontier.Sort(( x, y ) => x.SearchPriority.CompareTo(y.SearchPriority));
             }
 
         }
-
-        //ListPool<HexCell>.Add(frontier);
 
     }
 }
