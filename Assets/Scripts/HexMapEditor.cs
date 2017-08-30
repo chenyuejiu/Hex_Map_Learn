@@ -30,6 +30,8 @@ public class HexMapEditor : MonoBehaviour {
 	HexDirection dragDirection;
 	HexCell previousCell;
 
+    bool editMode;
+
     private void Awake() {
         terrainMaterial.DisableKeyword("GRID_ON");
     }
@@ -102,11 +104,11 @@ public class HexMapEditor : MonoBehaviour {
         walledMode = (OptionalToggle)mode;
     }
 
-    public void ShowUI (bool visible) {
-		hexGrid.ShowUI(visible);
-	}
+    //public void ShowUI( bool visible ) {
+    //    hexGrid.ShowUI(visible);
+    //}
 
-	void Update () {
+    void Update () {
 		if (
 			Input.GetMouseButton(0) &&
 			!EventSystem.current.IsPointerOverGameObject()
@@ -129,7 +131,12 @@ public class HexMapEditor : MonoBehaviour {
 			else {
 				isDrag = false;
 			}
-			EditCells(currentCell);
+            if ( editMode ) {
+                EditCells(currentCell);
+            }
+            else {
+                hexGrid.FindDistancesTo(currentCell);
+            }
 			previousCell = currentCell;
 		}
 		else {
@@ -220,5 +227,11 @@ public class HexMapEditor : MonoBehaviour {
         else {
             terrainMaterial.DisableKeyword("GRID_ON");
         }
+    }
+
+    public void SetEditMode(bool toggle ) {
+        editMode = toggle;
+
+        hexGrid.ShowUI(!toggle);
     }
 }
