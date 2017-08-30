@@ -28,7 +28,7 @@ public class HexMapEditor : MonoBehaviour {
 
 	bool isDrag;
 	HexDirection dragDirection;
-	HexCell previousCell;
+	HexCell previousCell, searchFromCell, searchToCell;
 
     bool editMode;
 
@@ -134,8 +134,22 @@ public class HexMapEditor : MonoBehaviour {
             if ( editMode ) {
                 EditCells(currentCell);
             }
-            else {
-                hexGrid.FindDistancesTo(currentCell);
+            else if ( Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell) {
+                if ( searchFromCell && searchFromCell != currentCell) {
+                    searchFromCell.DisableHighlight();
+                }
+
+                if( searchFromCell == null || searchFromCell != currentCell ) {
+                    searchFromCell = currentCell;
+                    searchFromCell.EnableHighlight(Color.blue);
+                    if ( searchToCell ) {
+                        hexGrid.FindPath(searchFromCell, searchToCell);
+                    }
+                }
+            }
+            else if( searchFromCell && searchFromCell != currentCell && searchToCell != currentCell ) {
+                searchToCell = currentCell;
+                hexGrid.FindPath(searchFromCell, searchToCell);
             }
 			previousCell = currentCell;
 		}

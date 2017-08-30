@@ -225,6 +225,14 @@ public class HexCell : MonoBehaviour {
         }
     }
 
+    public HexCell PathFrom { get; set; }
+    public int  SearchHeuristic { get; set; }
+    public int SearchPriority {
+        get {
+            return distance + SearchHeuristic;
+        }
+    }
+
     int specialIndex;
 
     bool walled;
@@ -480,5 +488,16 @@ public class HexCell : MonoBehaviour {
         Text label = uiRect.GetComponent<Text>();
 
         label.text = distance == int.MaxValue ? "" : distance.ToString();
+    }
+
+    public void DisableHighlight() {
+        Image hightlight = uiRect.GetChild(0).GetComponent<Image>();
+        hightlight.enabled = false;
+    }
+
+    public void EnableHighlight(Color color) {
+        Image hightlight = uiRect.GetChild(0).GetComponent<Image>();
+        hightlight.color = color;
+        hightlight.enabled = true;
     }
 }
