@@ -135,21 +135,20 @@ public class HexMapEditor : MonoBehaviour {
                 EditCells(currentCell);
             }
             else if ( Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell) {
-                if ( searchFromCell && searchFromCell != currentCell) {
-                    searchFromCell.DisableHighlight();
-                }
-
-                if( searchFromCell == null || searchFromCell != currentCell ) {
+                if(searchFromCell != currentCell ) {
+                    if ( searchFromCell ) {
+                        searchFromCell.DisableHighlight();
+                    }
                     searchFromCell = currentCell;
                     searchFromCell.EnableHighlight(Color.blue);
                     if ( searchToCell ) {
-                        hexGrid.FindPath(searchFromCell, searchToCell);
+                        hexGrid.FindPath(searchFromCell, searchToCell, 6);
                     }
                 }
             }
             else if( searchFromCell && searchFromCell != currentCell && searchToCell != currentCell ) {
                 searchToCell = currentCell;
-                hexGrid.FindPath(searchFromCell, searchToCell);
+                hexGrid.FindPath(searchFromCell, searchToCell, 6);
             }
 			previousCell = currentCell;
 		}

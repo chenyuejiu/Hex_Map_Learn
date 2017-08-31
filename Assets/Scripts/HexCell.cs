@@ -221,7 +221,6 @@ public class HexCell : MonoBehaviour {
         }
         set {
             distance = value;
-            UpdateDiatanceLabel();
         }
     }
 
@@ -233,6 +232,8 @@ public class HexCell : MonoBehaviour {
         }
     }
     public HexCell NextWithSamePriority { get; set; }
+
+    public int SearchPhase { get; set; }
 
     int specialIndex;
 
@@ -485,12 +486,6 @@ public class HexCell : MonoBehaviour {
 
     }
 
-    void UpdateDiatanceLabel() {
-        Text label = uiRect.GetComponent<Text>();
-
-        label.text = distance == int.MaxValue ? "" : distance.ToString();
-    }
-
     public void DisableHighlight() {
         Image hightlight = uiRect.GetChild(0).GetComponent<Image>();
         hightlight.enabled = false;
@@ -500,5 +495,10 @@ public class HexCell : MonoBehaviour {
         Image hightlight = uiRect.GetChild(0).GetComponent<Image>();
         hightlight.color = color;
         hightlight.enabled = true;
+    }
+
+    public void SetLabel(string text ) {
+        Text label = uiRect.GetComponent<Text>();
+        label.text = text;
     }
 }
