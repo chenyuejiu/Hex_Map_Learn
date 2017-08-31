@@ -8,6 +8,8 @@ public class HexMapEditor : MonoBehaviour {
 
     public Material terrainMaterial;
 
+    public HexUnit unitPrefab;
+
 	int activeElevation;
     int activeWaterLevel;
     int activeUrbanLevel, activeFarmLevel, activePlantLevel, activeSpecialIndex;
@@ -103,28 +105,24 @@ public class HexMapEditor : MonoBehaviour {
     public void SetWalledMode(int mode) {
         walledMode = (OptionalToggle)mode;
     }
-
-    //public void ShowUI( bool visible ) {
-    //    hexGrid.ShowUI(visible);
-    //}
-
+    
     void Update () {
-		if (
-			Input.GetMouseButton(0) &&
-			!EventSystem.current.IsPointerOverGameObject()
-		) {
-			HandleInput();
-		}
-		else {
+		if ( !EventSystem.current.IsPointerOverGameObject() ) {
+            if( Input.GetMouseButton(0) ) {
+                HandleInput();
+                return;
+            }
+            if ( Input.GetKeyDown(KeyCode.U) ) {
+                CreateUnit();
+                return;
+            }
 			previousCell = null;
 		}
 	}
 
 	void HandleInput () {
-		Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
-		if (Physics.Raycast(inputRay, out hit)) {
-			HexCell currentCell = hexGrid.GetCell(hit.point);
+        HexCell currentCell = GetCellUnderCursor();
+		if ( currentCell ) {
 			if (previousCell && previousCell != currentCell) {
 				ValidateDrag(currentCell);
 			}
@@ -246,5 +244,23 @@ public class HexMapEditor : MonoBehaviour {
         editMode = toggle;
 
         hexGrid.ShowUI(!toggle);
+    }
+
+    HexCell GetCellUnderCursor() {
+        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if(Physics.Raycast(inputRay, out hit) ) {
+            return hexGrid.GetCell(hit.point);
+        }
+        return null;
+    }
+
+    void CreateUnit() {
+        HexCell cell = GetCellUnderCursor();
+        if ( cell ) {
+            HexUnit unit = Instantiate(unitPrefab);
+            unit.transform.SetParent(hexGrid.transform, false);
+            unit.Location = cell;
+        }
     }
 }
