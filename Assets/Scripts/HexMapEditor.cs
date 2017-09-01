@@ -8,8 +8,6 @@ public class HexMapEditor : MonoBehaviour {
 
     public Material terrainMaterial;
 
-    public HexUnit unitPrefab;
-
 	int activeElevation;
     int activeWaterLevel;
     int activeUrbanLevel, activeFarmLevel, activePlantLevel, activeSpecialIndex;
@@ -113,7 +111,12 @@ public class HexMapEditor : MonoBehaviour {
                 return;
             }
             if ( Input.GetKeyDown(KeyCode.U) ) {
-                CreateUnit();
+                if ( Input.GetKey(KeyCode.LeftShift) ) {
+                    DestroyUnit();
+                }
+                else {
+                    CreateUnit();
+                }
                 return;
             }
 			previousCell = null;
@@ -257,10 +260,17 @@ public class HexMapEditor : MonoBehaviour {
 
     void CreateUnit() {
         HexCell cell = GetCellUnderCursor();
-        if ( cell ) {
-            HexUnit unit = Instantiate(unitPrefab);
-            unit.transform.SetParent(hexGrid.transform, false);
-            unit.Location = cell;
+        if ( cell && !cell.Unit ) {
+            hexGrid.AddUnit(
+                Instantiate(HexUnit.unitPrefab), cell, Random.Range(0f, 360f)
+            );
+        }
+    }
+
+    void DestroyUnit() {
+        HexCell cell = GetCellUnderCursor();
+        if(cell && cell.Unit ) {
+            hexGrid.RemoveUnit(cell.Unit);
         }
     }
 }
