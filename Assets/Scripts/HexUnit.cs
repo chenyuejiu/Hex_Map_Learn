@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
 
 public class HexUnit: MonoBehaviour {
 
@@ -28,15 +29,18 @@ public class HexUnit: MonoBehaviour {
         }
     }
 
-    public bool IsValidDestination(HexCell cell ) {
-        return !cell.IsUnderwater && !cell.Unit;
-    }
-
     public static HexUnit unitPrefab;
 
+    const float travelSpeed = 2f;
 
     HexCell location;
     float orientation;
+
+    List<HexCell> pathToTravel;
+
+    public bool IsValidDestination( HexCell cell ) {
+        return !cell.IsUnderwater && !cell.Unit;
+    }
 
     public void ValidateLocation() {
         transform.localPosition = location.Position;
@@ -59,5 +63,64 @@ public class HexUnit: MonoBehaviour {
         grid.AddUnit(
                 Instantiate(HexUnit.unitPrefab), grid.GetCell(coor), orientation
         );
+    }
+
+    public void Travel( List<HexCell> path ) {
+        Location = path[path.Count - 1];
+        pathToTravel = path;
+        StopAllCoroutines();
+        StartCoroutine(TravelPath());
+    }
+
+    private void OnDrawGizmos() {
+        if ( pathToTravel == null || pathToTravel.Count == 0 ) {
+            return;
+        }
+
+        Vector3 a, b, c = pathToTravel[0].Position;
+        for(int i=1;i<pathToTravel.Count;i++ ) {
+            a = c;
+            b = pathToTravel[i - 1].Position;
+            c = ( b + pathToTravel[i].Position ) * 0.5f;
+            for(float t =0f; t<1f;t+=0.1f ) {
+                Gizmos.DrawSphere(Bezier.Getpoint(a, b, c, t), 2f);
+            }
+        }
+        a = c;
+        b = pathToTravel[pathToTravel.Count - 1].Position ;
+        c = b;
+        for ( float t = 0f; t < 1f; t += 0.1f ) {
+            Gizmos.DrawSphere(Bezier.Getpoint(a, b, c, t), 2f);
+        }
+    }
+
+    IEnumerator TravelPath() {
+        Vector3 a, b, c = pathToTravel[0].Position;
+
+        float t = Time.deltaTime * travelSpeed;
+        for ( int i = 1; i < pathToTravel.Count; i++ ) {
+            a = c;
+            b = pathToTravel[i - 1].Position;
+            c = ( b + pathToTravel[i].Position ) * 0.5f;
+            for ( ; t < 1f; t += Time.deltaTime * travelSpeed ) {
+                transform.localPosition = Bezier.Getpoint(a, b, c, t);
+                yield return null;
+            }
+            t -= 1f;
+        }
+        a = c;
+        b = pathToTravel[pathToTravel.Count - 1].Position;
+        c = b;
+        for ( ; t < 1f; t += Time.deltaTime * travelSpeed ) {
+            transform.localPosition = Bezier.Getpoint(a, b, c, t);
+            yield return null;
+        }
+        transform.localPosition = location.Position;
+    }
+
+    private void OnEnable() {
+        if ( location ) {
+            transform.localPosition = location.Position;
+        }
     }
 }
