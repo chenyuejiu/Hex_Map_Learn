@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,7 +29,13 @@ public class HexGrid : MonoBehaviour {
 
     List<HexUnit> units = new List<HexUnit>();
 
-	void Awake () {
+    public bool HasPath {
+        get {
+            return currentPathExists;
+        }
+    }
+
+    void Awake () {
 		HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
         HexUnit.unitPrefab = unitPrefab;
@@ -116,6 +121,14 @@ public class HexGrid : MonoBehaviour {
 		}
 		return cells[x + z * cellCountX];
 	}
+
+    public HexCell GetCell(Ray ray ) {
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit) ) {
+            return GetCell(hit.point);
+        }
+        return null;
+    }
 
 	public void ShowUI (bool visible) {
 		for (int i = 0; i < chunks.Length; i++) {
@@ -263,7 +276,7 @@ public class HexGrid : MonoBehaviour {
                     continue;
                 }
 
-                if ( neighbor.IsUnderwater ) {
+                if ( neighbor.IsUnderwater || neighbor.Unit ) {
                     continue;
                 }
 
@@ -328,7 +341,7 @@ public class HexGrid : MonoBehaviour {
         currentPathTo.EnableHighlight(Color.red);
     }
 
-    void ClearPath() {
+    public void ClearPath() {
         if ( currentPathExists ) {
             HexCell current = currentPathTo;
             while ( current != currentPathFrom ) {

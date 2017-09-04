@@ -28,12 +28,12 @@ public class HexMapEditor : MonoBehaviour {
 
 	bool isDrag;
 	HexDirection dragDirection;
-	HexCell previousCell, searchFromCell, searchToCell;
 
-    bool editMode;
+    HexCell previousCell;
 
     private void Awake() {
         terrainMaterial.DisableKeyword("GRID_ON");
+        SetEditMode(false);
     }
 
     public void SetTerrainTypeIndex(int index) {
@@ -131,27 +131,9 @@ public class HexMapEditor : MonoBehaviour {
 			}
 			else {
 				isDrag = false;
-			}
-            if ( editMode ) {
-                EditCells(currentCell);
             }
-            else if ( Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell) {
-                if(searchFromCell != currentCell ) {
-                    if ( searchFromCell ) {
-                        searchFromCell.DisableHighlight();
-                    }
-                    searchFromCell = currentCell;
-                    searchFromCell.EnableHighlight(Color.blue);
-                    if ( searchToCell ) {
-                        hexGrid.FindPath(searchFromCell, searchToCell, 6);
-                    }
-                }
-            }
-            else if( searchFromCell && searchFromCell != currentCell && searchToCell != currentCell ) {
-                searchToCell = currentCell;
-                hexGrid.FindPath(searchFromCell, searchToCell, 6);
-            }
-			previousCell = currentCell;
+            EditCells(currentCell);
+            previousCell = currentCell;
 		}
 		else {
 			previousCell = null;
@@ -244,18 +226,11 @@ public class HexMapEditor : MonoBehaviour {
     }
 
     public void SetEditMode(bool toggle ) {
-        editMode = toggle;
-
-        hexGrid.ShowUI(!toggle);
+        enabled = toggle;
     }
 
     HexCell GetCellUnderCursor() {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if(Physics.Raycast(inputRay, out hit) ) {
-            return hexGrid.GetCell(hit.point);
-        }
-        return null;
+        return hexGrid.GetCell(Camera.main.ScreenPointToRay(Input.mousePosition));
     }
 
     void CreateUnit() {
