@@ -241,6 +241,14 @@ public class HexCell : MonoBehaviour {
 
     public int Index { get; set; }
 
+    public bool IsVisible {
+        get {
+            return visibility > 0;
+        }
+    }
+
+    int visibility;
+
     int specialIndex;
 
     bool walled;
@@ -513,5 +521,19 @@ public class HexCell : MonoBehaviour {
     public void SetLabel(string text ) {
         Text label = uiRect.GetComponent<Text>();
         label.text = text;
+    }
+
+    public void IncreaseVisibility() {
+        visibility += 1;
+        if ( visibility == 1 ) {
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
+    public void DecreaseVisibility() {
+        visibility -= 1;
+        if ( visibility == 0 ) {
+            ShaderData.RefreshVisibility(this);
+        }
     }
 }

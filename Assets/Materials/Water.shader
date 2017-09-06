@@ -10,41 +10,42 @@
 		LOD 200
 		
 		CGPROGRAM
-		#pragma surface surf Standard alpha
+		#pragma surface surf Standard alpha vertex:vert
 		#pragma target 3.0
+
+		#include "Water.cginc"
+		#include "HexCellData.cginc"
 
 		sampler2D _MainTex;
 
 		struct Input {
 			float2 uv_MainTex;
 			float3 worldPos;
+			float visibility;
 		};
+
+		void vert(inout appdata_full v, out Input data) {
+			UNITY_INITIALIZE_OUTPUT(Input, data);
+
+			float4 cell0 = GetCellData(v, 0);
+			float4 cell1 = GetCellData(v, 1);
+			float4 cell2 = GetCellData(v, 2);
+
+			data.visibility =
+				cell0.x * v.color.x + cell1.x * v.color.y + cell2.x * v.color.z;
+			data.visibility = lerp(0.25, 1, data.visibility);
+		}
 
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
-			float2 uv = IN.worldPos.xz;
-			uv.y += _Time.y;
-			float4 noise1 = tex2D(_MainTex, uv * 0.025);
-			
-			float2 uv2 = IN.worldPos.xz;
-			uv2.x += _Time.y;
-			float4 noise2 = tex2D(_MainTex, uv2 * 0.025);
 
-			float blendWave = 
-				sin((IN.worldPos.x + IN.worldPos.z) * 0.1 +
-				(noise1.y + noise2.z) + _Time.y);
-			blendWave *= blendWave;
-
-			float waves = 
-				lerp(noise1.z, noise1.w, blendWave) +
-				lerp(noise2.x, noise2.y, blendWave);
-			waves = smoothstep(0.75, 2, waves);
+			float waves = Waves(IN.worldPos.xz, _MainTex);
 
 			fixed4 c = saturate(_Color + waves);
-			o.Albedo = c.rgb;
+			o.Albedo = c.rgb * IN.visibility;
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
 			o.Alpha = c.a;

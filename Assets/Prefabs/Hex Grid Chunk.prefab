@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCollider: 0
-  useCellData: 0
+  useCellData: 1
   useUVCoordinates: 1
   useUV2Coordinates: 0
 --- !u!114 &114000012966898636
@@ -729,7 +729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCollider: 0
-  useCellData: 0
+  useCellData: 1
   useUVCoordinates: 1
   useUV2Coordinates: 1
 --- !u!114 &114810491748036220
@@ -744,7 +744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCollider: 0
-  useCellData: 0
+  useCellData: 1
   useUVCoordinates: 1
   useUV2Coordinates: 0
 --- !u!114 &114940596716291264
@@ -759,7 +759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCollider: 0
-  useCellData: 0
+  useCellData: 1
   useUVCoordinates: 1
   useUV2Coordinates: 0
 --- !u!114 &114965785148764424
@@ -774,7 +774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCollider: 0
-  useCellData: 0
+  useCellData: 1
   useUVCoordinates: 0
   useUV2Coordinates: 0
 --- !u!223 &223000012302594078
