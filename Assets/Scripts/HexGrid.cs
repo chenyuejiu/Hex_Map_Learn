@@ -430,15 +430,6 @@ public class HexGrid : MonoBehaviour {
                     continue;
                 }
 
-                if ( neighbor.IsUnderwater || neighbor.Unit ) {
-                    continue;
-                }
-
-                HexEdgeType edgeType = current.GetEdgeType(neighbor);
-                if ( edgeType == HexEdgeType.Cliff ) {
-                    continue;
-                }
-
                 int distance = current.Distance + 1;
                 if(distance > range ) {
                     continue;

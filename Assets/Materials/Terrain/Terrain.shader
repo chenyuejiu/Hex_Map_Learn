@@ -16,7 +16,7 @@
 		#pragma surface surf Standard fullforwardshadows vertex:vert
 		#pragma target 3.5
 		#pragma multi_compile _ GRID_ON
-		#include "HexCellData.cginc"
+		#include "../HexCellData.cginc"
 
 		sampler2D _GridTex;
 

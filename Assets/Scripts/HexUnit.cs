@@ -37,7 +37,7 @@ public class HexUnit: MonoBehaviour {
 
     public static HexUnit unitPrefab;
 
-    const float travelSpeed = 2f;
+    const float travelSpeed = 4f;
     const float rotationSpeed = 180f;
 
     HexCell location, currentTravelLoaction;
