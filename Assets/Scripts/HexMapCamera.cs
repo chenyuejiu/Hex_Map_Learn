@@ -30,9 +30,15 @@ public class HexMapCamera : MonoBehaviour {
         instance = this;
         swivel = transform.GetChild(0);
 		stick = swivel.GetChild(0);
-	}
+    }
 
-	void Update () {
+    private void OnEnable() {
+        if ( !instance ) {
+            instance = this;
+        }
+    }
+
+    void Update () {
 		float zoomDelta = Input.GetAxis("Mouse ScrollWheel");
 		if (zoomDelta != 0f) {
 			AdjustZoom(zoomDelta);
