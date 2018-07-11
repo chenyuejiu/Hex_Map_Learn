@@ -14,9 +14,15 @@ public class SaveLoadMenu : MonoBehaviour {
 
     public HexGrid hexGrid;
 
+    public string MapFileDir {
+        get {
+            string str = Application.dataPath;
+            return str.Substring(0, str.LastIndexOf(@"/")) + "/MapData";
+        }
+    }
 
     bool saveMode;
-    
+
     public void Open(bool saveMode) {
         this.saveMode = saveMode;
         if (this.saveMode) {
@@ -43,7 +49,8 @@ public class SaveLoadMenu : MonoBehaviour {
         if (mapName.Length == 0) {
             return null;
         }
-        return Path.Combine(Application.persistentDataPath, mapName + ".map");
+        return Path.Combine(MapFileDir, mapName + ".map");
+        //return Path.Combine(Application.persistentDataPath, mapName + ".map");
     }
 
     void Save(string path) {
@@ -98,7 +105,8 @@ public class SaveLoadMenu : MonoBehaviour {
             Destroy( listContent.GetChild( i ).gameObject );
         }
 
-        string[] paths = Directory.GetFiles( Application.persistentDataPath, "*.map" );
+        string[] paths = Directory.GetFiles(MapFileDir, "*.map" );
+        //string[] paths = Directory.GetFiles(Application.persistentDataPath, "*.map");
         Array.Sort( paths );
 
         for(int i=0;i<paths.Length;i++ ) {
