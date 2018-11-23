@@ -3,9 +3,9 @@ sampler2D _HexCellData;
 float4 _HexCellData_TexelSize;
 
 float4 FilterCellData(float4 data) {
-#if defined(HEX_MAP_EDIT_MODE)
-	data.x = 1;
-#endif
+	#if defined(HEX_MAP_EDIT_MODE)
+	data.xy = 1;
+	#endif
 	return data;
 }
 
