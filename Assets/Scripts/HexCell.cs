@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,10 +28,15 @@ public class HexCell : MonoBehaviour {
 			return elevation;
 		}
 		set {
-			if (elevation == value) {
-				return;
-			}
+            if ( elevation == value ) {
+                return;
+            }
+            int originalViewElevation = ViewElevation;
 			elevation = value;
+            if(ViewElevation != originalViewElevation ) {
+                ShaderData.ViewElevationChanged();
+            }
+
             RefreshPosition();
 
             validateRivers();
@@ -45,7 +51,21 @@ public class HexCell : MonoBehaviour {
 		}
     }
 
-	public bool HasIncomingRiver {
+    public int ViewElevation {
+        get {
+            return elevation >= waterLevel ? elevation : waterLevel;
+        }
+    }
+
+    public void ResetVisibility() {
+        if ( visibility > 0 ) {
+
+            visibility = 0;
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
+    public bool HasIncomingRiver {
 		get {
 			return hasIncomingRiver;
 		}
@@ -136,7 +156,11 @@ public class HexCell : MonoBehaviour {
             if(waterLevel == value) {
                 return;
             }
+            int originalViewElevation = ViewElevation;
             waterLevel = value;
+            if ( ViewElevation != originalViewElevation ) {
+                ShaderData.ViewElevationChanged();
+            }
             validateRivers();
             Refresh();
         }
@@ -241,13 +265,23 @@ public class HexCell : MonoBehaviour {
 
     public int Index { get; set; }
 
+    public bool Explorable { get; set; }
+
     public bool IsVisible {
         get {
-            return visibility > 0;
+            return visibility > 0 && IsExplored;
         }
     }
 
-    public bool IsExplored { get; private set; }
+    public bool IsExplored {
+        get {
+            return explored && Explorable;
+        }
+        private set {
+            explored = value;
+        }
+    }
+    bool explored;
 
     int visibility;
 
