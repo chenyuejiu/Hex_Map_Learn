@@ -150,7 +150,15 @@ public class HexGrid : MonoBehaviour {
         return null;
     }
 
-	public void ShowUI (bool visible) {
+    public HexCell GetCell( int xOffset, int zOffset ) {
+        return cells[xOffset + zOffset * cellCountX];
+    }
+
+    public HexCell GetCell( int cellIndex ) {
+        return cells[cellIndex];
+    }
+
+    public void ShowUI (bool visible) {
 		for (int i = 0; i < chunks.Length; i++) {
 			chunks[i].ShowUI(visible);
 		}
