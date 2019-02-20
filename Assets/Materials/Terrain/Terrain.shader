@@ -6,9 +6,9 @@
 		_GridTex("Grid Texture", 2D) = "white"{}
 
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		//_Metallic ("Metallic", Range(0,1)) = 0.0
 		_Specular("Specular",Color) = (0.2,0.2,0.2)
 		_BackgroundColor("Background Color", Color) = (0,0,0)
+		[Toggle(SHOW_MAP_DATA)] _showMapData ("show Map Data", Float) = 0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -20,6 +20,8 @@
 		#pragma multi_compile _ GRID_ON
 		#pragma multi_compile _ HEX_MAP_EDIT_MODE
 
+		#pragma shader_feature SHOW_MAP_DATA
+
 		#include "../HexCellData.cginc"
 
 		sampler2D _GridTex;
@@ -28,11 +30,14 @@
 		UNITY_DECLARE_TEX2DARRAY(_MainTex);
 
 		struct Input {
-			//float2 uv_MainTex;
 			float4 color : COLOR;
 			float3 worldPos;
 			float3 terrain;
 			float4 visibility;
+
+			#if defined(SHOW_MAP_DATA)
+				float mapData;
+			#endif
 		};
 
 		void vert(inout appdata_full v, out Input data) {
@@ -52,6 +57,10 @@
 			data.visibility.z = cell2.x;
 			data.visibility.xyz = lerp(0.25, 1, data.visibility.xyz);
 			data.visibility.w = cell0.y * v.color.x + cell1.y * v.color.y + cell2.y * v.color.z;
+
+			#if defined(SHOW_MAP_DATA)
+				data.mapData = cell0.z * v.color.x + cell1.z * v.color.y + cell2.z * v.color.z;
+			#endif
 		}
 
 		float4 GetTerrainColor(Input IN, int index) {
@@ -84,6 +93,9 @@
 #endif
 			float explored = IN.visibility.w;
 			o.Albedo = c.rgb * grid * _Color * explored;
+			#if defined(SHOW_MAP_DATA)
+				o.Albedo = IN.mapData * grid;
+			#endif
 
 			//o.Metallic = _Metallic;
 			o.Specular = _Specular * explored;
