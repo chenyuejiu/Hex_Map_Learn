@@ -37,7 +37,7 @@ public class HexMapGenerator: MonoBehaviour {
     public int waterLevel = 3;
 
     [Range(-4, 0)]
-    public int elevationMinimum = 3;
+    public int elevationMinimum = -2;
 
     [Range(6, 10)]
     public int elevationMaximum = 8;
@@ -56,9 +56,6 @@ public class HexMapGenerator: MonoBehaviour {
 
     [Range(0, 100)]
     public int erosionPercentage = 50;
-
-    [Range(0f, 1f)]
-    public float evaporation = 0.5f;
 
     [Range(0f, 1f)]
     public float startingMoisture = 0.1f;
@@ -114,6 +111,8 @@ public class HexMapGenerator: MonoBehaviour {
         for ( int i = 0; i < cellCount; i++ ) {
             grid.GetCell(i).SearchPhase = 0;
         }
+
+        Random.state = originalRandomState;
     }
 
     void ErodeLand() {
@@ -257,7 +256,7 @@ public class HexMapGenerator: MonoBehaviour {
         while ( size < chunkSize && searchFrontier.Count > 0 ) {
             HexCell current = searchFrontier.Dequeue();
             int originalElevation = current.Elevation;
-            int newElevation = originalElevation - sink;
+            int newElevation = current.Elevation - sink;
             if ( newElevation < elevationMinimum ) {
                 continue;
             }
@@ -366,8 +365,8 @@ public class HexMapGenerator: MonoBehaviour {
             default:
                 region.xMin = mapBorderX;
                 region.xMax = grid.cellCountX - mapBorderX;
-                region.zMax = mapBorderZ;
-                region.zMin = grid.cellCountZ - mapBorderZ;
+                region.zMin = mapBorderZ;
+                region.zMax = grid.cellCountZ - mapBorderZ;
                 regions.Add(region);
                 break;
             case 2:
@@ -375,8 +374,8 @@ public class HexMapGenerator: MonoBehaviour {
 
                     region.xMin = mapBorderX;
                     region.xMax = grid.cellCountX / 2 - regionBorder;
-                    region.zMax = mapBorderZ;
-                    region.zMin = grid.cellCountZ - mapBorderZ;
+                    region.zMin = mapBorderZ;
+                    region.zMax = grid.cellCountZ - mapBorderZ;
                     regions.Add(region);
                     region.xMin = grid.cellCountX / 2 + regionBorder;
                     region.xMax = grid.cellCountX - mapBorderX;
@@ -386,8 +385,8 @@ public class HexMapGenerator: MonoBehaviour {
 
                     region.xMin = mapBorderX;
                     region.xMax = grid.cellCountX - mapBorderX;
-                    region.zMax = mapBorderZ;
-                    region.zMin = grid.cellCountZ / 2 - regionBorder;
+                    region.zMin = mapBorderZ;
+                    region.zMax = grid.cellCountZ / 2 - regionBorder;
                     regions.Add(region);
                     region.zMin = grid.cellCountZ / 2 + regionBorder;
                     region.zMax = grid.cellCountZ - mapBorderZ;
