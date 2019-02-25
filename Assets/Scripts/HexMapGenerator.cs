@@ -118,7 +118,7 @@ public class HexMapGenerator: MonoBehaviour {
         new Biome(0,0),new Biome(1,1),new Biome(1,2),new Biome(1,3),
     };
 
-    public void GeneratorMap( int x, int z ) {
+    public void GeneratorMap( int x, int z, bool wrapping ) {
         Random.State originalRandomState = Random.state;
         if ( !useFixedSeed ) {
 
@@ -131,7 +131,7 @@ public class HexMapGenerator: MonoBehaviour {
 
         cellCount = x * z;
 
-        grid.CreateMap(x, z);
+        grid.CreateMap(x, z, wrapping);
 
         if ( searchFrontier == null ) {
             searchFrontier = new HexCellPriorityQueue();
@@ -490,11 +490,17 @@ public class HexMapGenerator: MonoBehaviour {
         else {
             regions.Clear();
         }
+
+        int borderX = grid.wrapping ? regionBorder : mapBorderX;
+
         MapRegion region;
         switch ( regionCount ) {
             default:
-                region.xMin = mapBorderX;
-                region.xMax = grid.cellCountX - mapBorderX;
+                if ( grid.wrapping ) {
+                    borderX = 0;
+                }
+                region.xMin = borderX;
+                region.xMax = grid.cellCountX - borderX;
                 region.zMin = mapBorderZ;
                 region.zMax = grid.cellCountZ - mapBorderZ;
                 regions.Add(region);
@@ -512,6 +518,10 @@ public class HexMapGenerator: MonoBehaviour {
                     regions.Add(region);
                 }
                 else {
+
+                    if ( grid.wrapping ) {
+                        borderX = 0;
+                    }
 
                     region.xMin = mapBorderX;
                     region.xMax = grid.cellCountX - mapBorderX;

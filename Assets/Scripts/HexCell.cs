@@ -283,6 +283,8 @@ public class HexCell : MonoBehaviour {
     }
     bool explored;
 
+    public int ColumnIndex { get; set; }
+
     int visibility;
 
     int specialIndex;

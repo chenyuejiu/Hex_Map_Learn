@@ -20,10 +20,10 @@ public class NewMapMenu : MonoBehaviour {
     void CreateMap(int x, int z) {
 
         if( generatorMaps ) {
-            mapGenerator.GeneratorMap(x, z);
+            mapGenerator.GeneratorMap(x, z, wrapping);
         }
         else {
-            hexGrid.CreateMap(x, z);
+            hexGrid.CreateMap(x, z, wrapping);
         }
 
         HexMapCamera.ValidatePosition();
@@ -47,5 +47,11 @@ public class NewMapMenu : MonoBehaviour {
     public void ToggleMapGeneration( bool toggle ) {
 
         generatorMaps = toggle;
+    }
+
+    bool wrapping = true;
+
+    public void ToggleWrapping(bool toggle ) {
+        wrapping = toggle;
     }
 }

@@ -35,6 +35,7 @@ public class HexMapCamera : MonoBehaviour {
     private void OnEnable() {
         if ( !instance ) {
             instance = this;
+            ValidatePosition();
         }
     }
 
@@ -88,14 +89,31 @@ public class HexMapCamera : MonoBehaviour {
 
 		Vector3 position = transform.localPosition;
 		position += direction * distance;
-		transform.localPosition = ClampPosition(position);
+        transform.localPosition = grid.wrapping ? WrappPosition(position) : ClampPosition(position);
 	}
 
+    Vector3 WrappPosition(Vector3 position ) {
+        //float xMax = ( grid.cellCountX - 0.5f ) * HexMetrics.innerDiameter;
+        //position.x = Mathf.Clamp(position.x, 0f, xMax);
+        float width = grid.cellCountX * HexMetrics.innerDiameter;
+        while ( position.x < 0f ) {
+            position.x += width;
+        }
+        while ( position.x > width ) {
+            position.x -= width;
+        }
+
+        float zMax = ( grid.cellCountZ - 1 ) * ( 1.5f * HexMetrics.outerRadius );
+        position.z = Mathf.Clamp(position.z, 0f, zMax);
+
+        grid.CenterMap(position.x);
+
+        return position;
+    }
+
 	Vector3 ClampPosition (Vector3 position) {
-		float xMax =
-			(grid.cellCountX - 0.5f) *
-			(2f * HexMetrics.innerRadius);
-		position.x = Mathf.Clamp(position.x, 0f, xMax);
+        float xMax = ( grid.cellCountX - 0.5f ) * HexMetrics.innerDiameter;
+        position.x = Mathf.Clamp(position.x, 0f, xMax);
 
 		float zMax =
 			(grid.cellCountZ - 1) *
